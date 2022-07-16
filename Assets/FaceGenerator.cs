@@ -16,10 +16,10 @@ public class FaceGenerator : MonoBehaviour
     int size = 10;
     float range = 1.0f;
     public Color faceColor;
-    public bool isLight;
-    public float lightInstance;
+    float lightInstance;
     int verticesCount;
     int patchesCount;
+    public float reflectFactor;
 
     public Vector3 normal
     {
@@ -51,7 +51,7 @@ public class FaceGenerator : MonoBehaviour
                     + patchWidth * new Vector3(h, v, 0);
 
                 vertices[vertexId] = new Vertex(this, vertexId, vertexPos);
-                vertices[vertexId].color = colors[vertexId] = isLight ? faceColor : Color.black;
+                colors[vertexId] = vertices[vertexId].color;
 
                 if (v == 0 || h == 0)
                     continue;
@@ -95,13 +95,14 @@ public class FaceGenerator : MonoBehaviour
         mesh.RecalculateTangents();
     }
 
-    public FaceGenerator Setting(bool outside, Quaternion localRotation, Vector3 localPosition, float range, Color color, bool isLight)
+    public FaceGenerator Setting(bool outside, Quaternion localRotation, Vector3 localPosition, float range, Color color, float lightInstance, float reflectFactor)
     {
+        this.reflectFactor = reflectFactor;
         transform.localPosition = localPosition;
         transform.localRotation = localRotation;
         this.outside = outside;
         this.faceColor = color;
-        this.isLight = isLight;
+        this.lightInstance = lightInstance;
         this.range = range;
 
         verticesCount = (size + 1) * (size + 1);
@@ -122,12 +123,6 @@ public class FaceGenerator : MonoBehaviour
         {
             Gizmos.DrawLine(patch.center, patch.center + patch.normal);
         }
-    }
-
-    public bool CheckFaceToFace(FaceGenerator face)
-    {
-        var distance = face.transform.position - transform.position;
-        return Vector3.Dot(distance, normal) > 0 && Vector3.Dot(-distance, face.normal) > 0;
     }
 
     public void ApplyFaceToFace(FaceGenerator anotherFace)
@@ -152,5 +147,10 @@ public class FaceGenerator : MonoBehaviour
             patch.ApplyVertexColor();
 
         mesh.colors = colors;
+    }
+
+    public Color GetSelfLightInstance()
+    {
+        return faceColor * lightInstance;
     }
 }

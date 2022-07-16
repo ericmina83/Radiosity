@@ -12,6 +12,8 @@ public class PatchToPatchData
     public float f12;
     public float f21;
     public float fCommon;
+    public bool visible;
+
     public PatchToPatchData(Patch patch1, Patch patch2)
     {
         this.patch1 = patch1;
@@ -24,6 +26,13 @@ public class PatchToPatchData
         fCommon = Vector3.Dot(dir, patch1.normal) * Vector3.Dot(-dir, patch2.normal) / (Mathf.PI * length * length) * patch1.area * patch2.area;
         f12 = fCommon / patch1.area;
         f21 = fCommon / patch2.area;
+
+        RaycastHit hit;
+
+        if (Physics.Raycast(patch1.center, dir, out hit))
+        {
+
+        }
     }
 }
 
@@ -54,13 +63,6 @@ public class Patch
     public Vertex rb;
     public Color color;
     public Color newColor;
-    public bool isLight
-    {
-        get
-        {
-            return face.isLight;
-        }
-    }
 
     Dictionary<Patch, PatchToPatchData> p2pDatas = new Dictionary<Patch, PatchToPatchData>();
 
@@ -78,10 +80,15 @@ public class Patch
         lb.patches.Add(this);
         rt.patches.Add(this);
         rb.patches.Add(this);
+
+        color = newColor = face.GetSelfLightInstance();
     }
 
     public void ApplyPatchToPatch(Patch anotherPatch)
     {
+        if (anotherPatch == this)
+            return;
+
         PatchToPatchData data = null;
         if (p2pDatas.ContainsKey(anotherPatch))
             data = p2pDatas[anotherPatch];
@@ -91,17 +98,13 @@ public class Patch
         if (data.fCommon < 0)
             return;
 
-        if (anotherPatch.isLight)
-            newColor += face.faceColor * data.f12 * area;
-        // newColor = face.faceColor;
+        newColor += face.faceColor * anotherPatch.color * data.f12 * face.reflectFactor;
     }
 
     public void OverrideColor()
     {
-        if (!isLight)
-            color = newColor;
-
-        newColor = Color.black;
+        color = newColor;
+        newColor = face.GetSelfLightInstance();
     }
 
     public void ApplyVertexColor()

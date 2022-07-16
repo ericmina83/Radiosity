@@ -15,6 +15,7 @@ public class Vertex
         this.face = face;
         this.id = id;
         this.position = position;
+        this.color = Color.black;
     }
 
     public void ApplyColor()
