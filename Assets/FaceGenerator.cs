@@ -148,7 +148,7 @@ public class FaceGenerator : MonoBehaviour
     public void ApplyPatchColor()
     {
         foreach (var patch in patches)
-            patch.OverrideColor();
+            patch.ApplyPatchColor();
     }
 
     public void ApplyVertexColor()

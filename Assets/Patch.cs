@@ -23,12 +23,20 @@ public class PatchToPatchData
         length = dis.magnitude;
         dir = dis.normalized;
 
-        fCommon = Vector3.Dot(dir, patch1.normal) * Vector3.Dot(-dir, patch2.normal) / (Mathf.PI * length * length) * patch1.area * patch2.area;
+        float dot1 = Vector3.Dot(dir, patch1.normal);
+
+        if (dot1 < 0)
+            return;
+
+        float dot2 = Vector3.Dot(-dir, patch2.normal);
+
+        if (dot2 < 0)
+            return;
+
+        fCommon = dot1 * dot2 / (Mathf.PI * length * length) * patch1.area * patch2.area;
         f12 = fCommon / patch1.area;
         f21 = fCommon / patch2.area;
 
-        if (fCommon < 0f)
-            return;
 
         RaycastHit hit;
 
@@ -115,7 +123,7 @@ public class Patch
             p2pDatas.Add(anotherPatch, new PatchToPatchData(this, anotherPatch));
     }
 
-    public void OverrideColor()
+    public void ApplyPatchColor()
     {
         color = newColor;
         newColor = face.GetSelfLightInstance();

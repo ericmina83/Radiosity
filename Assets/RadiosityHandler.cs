@@ -21,8 +21,7 @@ public class RadiosityHandler : MonoBehaviour
         cubes.Add(cubeGreen);
     }
 
-    // Update is called once per frame
-    public void Algorithm()
+    public void CheckVisibility()
     {
         foreach (var cube1 in cubes)
         {
@@ -31,7 +30,11 @@ public class RadiosityHandler : MonoBehaviour
                 cube1.CheckVisibleCubeToCube(cube2);
             }
         }
+    }
 
+    // Update is called once per frame
+    public void Run()
+    {
         foreach (var cube1 in cubes)
         {
             foreach (var cube2 in cubes)
