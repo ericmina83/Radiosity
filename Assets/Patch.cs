@@ -12,7 +12,7 @@ public class PatchToPatchData
     public float f12;
     public float f21;
     public float fCommon;
-    public bool visible;
+    public bool visible = false;
 
     public PatchToPatchData(Patch patch1, Patch patch2)
     {
@@ -27,11 +27,17 @@ public class PatchToPatchData
         f12 = fCommon / patch1.area;
         f21 = fCommon / patch2.area;
 
+        if (fCommon < 0f)
+            return;
+
         RaycastHit hit;
 
         if (Physics.Raycast(patch1.center, dir, out hit))
         {
-
+            if (hit.transform == patch2.face.transform)
+            {
+                visible = true;
+            }
         }
     }
 }
@@ -89,16 +95,24 @@ public class Patch
         if (anotherPatch == this)
             return;
 
-        PatchToPatchData data = null;
-        if (p2pDatas.ContainsKey(anotherPatch))
-            data = p2pDatas[anotherPatch];
-        else
-            p2pDatas.Add(anotherPatch, data = new PatchToPatchData(this, anotherPatch));
+        if (!p2pDatas.ContainsKey(anotherPatch))
+            return;
 
-        if (data.fCommon < 0)
+        PatchToPatchData data = p2pDatas[anotherPatch];
+
+        if (!data.visible)
             return;
 
         newColor += face.faceColor * anotherPatch.color * data.f12 * face.reflectFactor;
+    }
+
+    public void CheckVisiblePatchToPatch(Patch anotherPatch)
+    {
+        if (anotherPatch == this)
+            return;
+
+        if (!p2pDatas.ContainsKey(anotherPatch))
+            p2pDatas.Add(anotherPatch, new PatchToPatchData(this, anotherPatch));
     }
 
     public void OverrideColor()

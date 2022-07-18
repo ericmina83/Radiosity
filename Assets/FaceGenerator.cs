@@ -32,7 +32,7 @@ public class FaceGenerator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        mesh = GetComponent<MeshFilter>().mesh = new Mesh();
+        GetComponent<MeshCollider>().sharedMesh = mesh = GetComponent<MeshFilter>().mesh = new Mesh();
         CreateMesh();
     }
 
@@ -133,6 +133,16 @@ public class FaceGenerator : MonoBehaviour
         foreach (var patch in patches)
             foreach (var anotherPatch in anotherFace.patches)
                 patch.ApplyPatchToPatch(anotherPatch);
+    }
+
+    public void CheckVisibleFaceToFace(FaceGenerator anotherFace)
+    {
+        if (this == anotherFace)
+            return;
+
+        foreach (var patch in patches)
+            foreach (var anotherPatch in anotherFace.patches)
+                patch.CheckVisiblePatchToPatch(anotherPatch);
     }
 
     public void ApplyPatchColor()

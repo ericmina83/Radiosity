@@ -53,11 +53,11 @@ public class CubeGenerator : MonoBehaviour
                 face.ApplyFaceToFace(anotherFace);
     }
 
-    public void CheckRayCubeToCube(CubeGenerator anotherCube)
+    public void CheckVisibleCubeToCube(CubeGenerator anotherCube)
     {
         foreach (var face in faces)
             foreach (var anotherFace in anotherCube.faces)
-                face.ApplyFaceToFace(anotherFace);
+                face.CheckVisibleFaceToFace(anotherFace);
     }
 
     public void ApplyPatchColor()

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7019587986870655550}
   - component: {fileID: 7019587986870655549}
   - component: {fileID: 7019587986870655548}
+  - component: {fileID: -1210405776240728047}
   m_Layer: 0
   m_Name: FaceGenerator
   m_TagString: Untagged
@@ -96,4 +97,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a007cb5d463660459a8a58adf384074, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  outside: 1
+  mesh: {fileID: 0}
+  colors: []
+  faceColor: {r: 0, g: 0, b: 0, a: 0}
+  reflectFactor: 0
+--- !u!64 &-1210405776240728047
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7019587986870655546}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 0}
